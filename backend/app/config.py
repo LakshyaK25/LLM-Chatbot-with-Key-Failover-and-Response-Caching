@@ -4,6 +4,15 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass
+from pathlib import Path
+
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(Path(__file__).resolve().parents[2] / ".env")
+    load_dotenv()
+except ImportError:
+    pass
 
 DEFAULT_SYSTEM_PROMPT = "You are a helpful assistant. Answer clearly and concisely."
 
@@ -25,7 +34,7 @@ def load_settings() -> Settings:
     keys = _split(os.getenv("LLM_API_KEYS", ""))
     return Settings(
         api_keys=[(f"key_{index}", key) for index, key in enumerate(keys, start=1)],
-        model=os.getenv("LLM_MODEL", "gemini/gemini-2.0-flash"),
+        model=os.getenv("LLM_MODEL", "gemini/gemini-3.5-flash"),
         database_url=os.getenv("DATABASE_URL", "sqlite:///./data/app.db"),
         allowed_origins=_split(
             os.getenv("ALLOWED_ORIGINS", "http://localhost:3000")
